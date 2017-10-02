@@ -1,0 +1,365 @@
+#include<stdio.h>
+#include<string.h>
+#include<conio.h>
+#include<stdlib.h>
+//for wait() function
+//{
+#include<iostream>
+#include<time.h>
+//}
+
+typedef struct book
+{
+	int book_num;
+	char book_name[100];
+	int pages;
+	float price;
+	char author[50];
+	char issued_to[10];
+}book_record;
+book_record bk;
+
+typedef struct student_info
+{
+	char student_name[50];
+	long student_id;
+	int student_age;
+	char student_address[100];
+}stu_info;
+stu_info stu;
+
+void choice();
+void display_books();
+void display_student();
+void new_book_entry();
+void booksIssued();
+void student_entry(char *);
+void delete_record();
+void search_student();
+void search_book();
+void Password();
+
+//wait function declaration and defination****************************************
+void wait(int);
+
+void wait(int milliseconds)
+{
+	clock_t endwait;
+	endwait = clock() + milliseconds;
+	while(clock() < endwait)
+	{ }
+}
+//*******************************************************************************
+
+
+ int main()
+ {
+ 	Password();
+ 	return 0;
+ }
+ 
+ 
+ //password() function declaration and defination****************************************
+char password[10]={"rpjms"};//PASSWORD
+void Password(void)
+{
+
+   system("cls");
+   char d[25]="Password Protected";
+   char ch,pass[10];
+   int i=0;
+   printf("Enter Password:");
+
+   while(ch!=13)
+   {
+	ch=getch();
+
+	if(ch!=13 && ch!=8) // ascii 8=\n and ascii 13=\r
+	{
+	putch('*');
+	pass[i] = ch;
+	i++;
+	}
+   }
+   pass[i] = '\0';
+   if(stricmp(pass,password)==0)
+   {
+	printf("\t\t\nPassword match");
+	printf("\t\nPress any key to countinue.....");
+	getch();
+	choice();
+   }
+   else
+   {
+	 printf("\n \a Warning!! Incorrect Password");
+	 printf("\n Press any key.....");
+	 getch();
+	 Password();
+   }
+}
+//**********************************************************************************
+ 
+ 
+
+// CHAR ARRAY FOR PRINTING "LIBRARY MANAGEMENT"----------------------------------
+char d[]={"LIBRARY MANAGEMENT"};
+//-----------------------------------------------------------------------------
+
+
+ 
+ void choice()
+ {
+ 	int j;
+ 	printf("\n");
+ 	//
+ 	  for(j=0;j<20;j++)
+    {
+    wait(50);
+    printf("*");
+    }
+    for(j=0;j<20;j++)
+   {
+   wait(50);
+   printf("%c",d[j]);
+   }
+   for(j=0;j<20;j++)
+   {
+   wait(50);
+   printf("*");
+   }
+ 	//
+	int  ch=0;
+	do
+	{
+	printf("\n\n\n 1 = DISPLAY BOOKS RECORD \n 2 = DISPLAY STUDENTS RECORD \n 3 = ENTER NEW BOOK RECORD \n 4 = NUMBER OF BOOKS ISSUED \n 5 = CLEAR ALL RECORDS \n 6 = SEARCH FOR A PARTICULAR BOOK \n 7 = SEARCH FOR A PARTICULAR STUDENT \n 8 = EXIT \n");
+    printf("\n\n Enter your choice : ");
+    
+	scanf("%d",&ch);
+	system("cls"); //for clear screen
+	switch(ch)
+	{
+		case 1:display_books();
+			   break;
+	    case 2:display_student();
+	           break;
+		case 3:new_book_entry();
+			   break;
+		case 4:booksIssued();
+		       break;	  
+	    case 5:delete_record();
+	           printf("\n All previous record deleted.");
+		       break;
+	    case 6:search_book();
+		       break;
+		case 7:search_student();
+		       break; 
+		case 8:printf("\n program will be exiting in 3 seconds...\n");
+		       wait(3000);// for exiting after 3 sec
+		       ch = -1;
+			   break;
+		default:printf("\n Hey genius you dont need to read a book... just go back to your home. \n");
+		       ch = -1;
+	}
+	
+	}while(ch!=-1);
+	printf("\n\n::::::::::::::::::::::::CLOSE:::::::::::::::::::::::::::::\n\n");
+ }
+
+void display_books()
+{
+	FILE *fp;
+	fp=fopen("book_collection.dat","rb");
+	if(fp==NULL)
+	{
+		perror("-------------------------->>>>");
+	}
+     if((fread(&bk,sizeof(bk),1,fp)) != 1 )
+	  {
+	  	 printf("\n RECORD IS EMPTY \n");
+	  }
+	 else 
+	  {
+	  	do{
+	  	printf("\n BOOK NUMBER : %d",bk.book_num);
+	  	printf("\n NAME OF BOOK : %s ",bk.book_name);
+	  	printf("\n NUMBER OF PAGES: %d ",bk.pages);
+	  	printf("\n PRICE: %f ",bk.price);
+	  	printf("\n AUTHOR's NAME : %s ",bk.author);
+	  	printf("\n ISSUED TO : %s \n\n",bk.issued_to);
+		}while((fread(&bk,sizeof(bk),1,fp))==1);
+	  }
+	  fclose(fp);
+}
+
+void display_student()
+{
+	int flag;
+	FILE *fpstudent;
+	fpstudent = fopen("student_database.dat","rb");
+	if(fpstudent==NULL)
+	{
+		perror("------------------>");
+	}
+	else
+	{
+		while(fread(&stu,sizeof(stu),1,fpstudent) == 1)
+		{ 
+			printf("\n\n\n Name of the student = %s",stu.student_name);
+			printf("\n ID number of the student = %d",stu.student_id);
+			printf("\n Age of the student = %d",stu.student_age);
+			printf("\n Address of the student = %s",stu.student_address);
+		}
+	}
+	fclose(fpstudent);
+}
+
+void new_book_entry()
+{
+	FILE *fp;
+	fp=fopen("book_collection.dat","ab");
+		printf("\n BOOK NUMBER:");
+  		scanf("%d",&bk.book_num);
+	  	printf("\n NAME OF BOOK:");
+	  	fflush(stdin);
+		gets(bk.book_name);
+	  	fflush(stdin);
+	  	printf("\n NUMBER OF PAGES:");
+	  	scanf("%d",&bk.pages);
+	  	printf("\n PRICE:");
+	  	scanf("%f",&bk.price);
+  		printf("\n AUTHOR's NAME:");
+        fflush(stdin);
+	  	gets(bk.author);
+  		fflush(stdin);
+		printf("\n Issued to:");
+  		fflush(stdin);
+		gets(bk.issued_to);		
+		fflush(stdin);
+		printf("\n Provide details of the student : ");
+		student_entry(bk.issued_to);
+		
+		fwrite(&bk,sizeof(bk),1,fp);
+	fclose(fp);
+}
+
+void booksIssued()
+{
+	int numberOfBooksIssued = 0;
+	FILE *fp;
+	fp = fopen("book_collection.dat","rb");
+	if(fp == NULL)
+	{
+		printf("\n File not present.");
+		exit(1);
+	}
+	else
+	{
+		while(fread(&bk,sizeof(bk),1,fp)==1)
+		{
+			numberOfBooksIssued++;
+		}
+	}
+	printf("\n Total number of books issued = %d ",numberOfBooksIssued);
+}
+
+
+void student_entry(char *nameForCopy)
+{
+	FILE *fpstudent;
+	fpstudent = fopen("student_database.dat","ab");
+	strcpy(stu.student_name,nameForCopy);
+	fflush(stdin);
+	printf("\n Enter Student ID number  :  ");
+	scanf("%d",&stu.student_id);
+	printf("\n Enter age of the student :  ");
+	scanf("%d",&stu.student_age);
+    printf("\n Enter address of the student :  ");
+	fflush(stdin);
+	gets(stu.student_address);
+	fflush(stdin);
+	fwrite(&stu, sizeof(stu),1,fpstudent);
+	fclose(fpstudent);
+}
+
+void delete_record()
+{
+	FILE *fp;
+	fp=fopen("book_collection.dat","wb");
+	fclose(fp);
+	fp=fopen("student_database.dat","wb");
+	fclose(fp);
+}
+
+void search_book()
+{
+	int flag = 0;
+	char nameOfBook[50];
+	FILE *fp;
+	fp =fopen("book_collection.dat","rb");
+	if(fp == NULL)
+	{
+		perror("--------------->");
+	}
+	else
+	{
+		printf("\n Enter the name of the book you want to search for : ");
+		fflush(stdin);
+		gets(nameOfBook);
+		fflush(stdin);
+		while(fread(&bk,sizeof(bk),1,fp)==1)
+		{
+			if(stricmp(nameOfBook,bk.book_name)==0)
+			{
+				printf("\n\n DETAILS OF THIS BOOK ");
+				printf("\n BOOK NUMBER : %d",bk.book_num);
+	  			printf("\n NAME OF BOOK : %s ",bk.book_name);
+	  			printf("\n NUMBER OF PAGES: %d ",bk.pages);
+	  			printf("\n PRICE: %f ",bk.price);
+	  			printf("\n AUTHOR's NAME : %s ",bk.author);
+	  			printf("\n ISSUED TO : %s \n\n",bk.issued_to);
+	  			flag = 1;
+			}
+		}
+		if(flag == 0)
+		{
+			printf("\n No book with this name is present in the system.");
+		}
+	}
+	fclose(fp);
+}
+
+void search_student()
+{
+	int flag = 0;
+	char nameOfStudent[50];
+	FILE *fpstudent;
+	fpstudent =fopen("student_database.dat","rb");
+	if(fpstudent == NULL)
+	{
+		perror("--------------->");
+	}
+	else
+	{
+		printf("\n Enter the name of the student you want to search for : ");
+		fflush(stdin);
+		gets(nameOfStudent);
+		fflush(stdin);
+		while(fread(&stu,sizeof(stu),1,fpstudent)==1)
+		{
+			if(stricmp(nameOfStudent,stu.student_name)==0)
+			{
+				printf("\n\n DETAILS OF THIS STUDENT  ");
+				printf("\n Name of the student = %s",stu.student_name);
+				printf("\n ID number of the student = %d",stu.student_id);
+				printf("\n Age of the student = %d",stu.student_age);
+				printf("\n Address of the student = %s",stu.student_address);
+				flag = 1;
+			}
+		}
+		if(flag == 0)
+		{
+			printf("\n No student with this name is present in the system.");
+		}
+	}
+	fclose(fpstudent);
+}
