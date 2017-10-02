@@ -13,7 +13,8 @@ you can use this software for library books management or your personal bookshel
 you have to simply compile and run the code.
 
 # Credits:
-@bishtpriya98 and @rishabh0005
+@bishtpriya98
+@rishabh0005
 
 # Note:
 This project is developed for Windows platform.
