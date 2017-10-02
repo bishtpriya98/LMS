@@ -14,6 +14,7 @@ you have to simply compile and run the code.
 
 # Credits:
 [Priya Bisht](https://github.com/bishtpriya98)
+ and 
 [Rishabh Aggarwal](https://github.com/rishabh0005)
 
 # Note:
